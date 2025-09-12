@@ -10,7 +10,7 @@ export default function DashboardLayout({
   return (
     <div className='h-screen flex'>
       {/* {left} */}
-      <div className='w-[14%] md:w-[8%] lg:w-[14%] bg-red-200 p-4'>
+      <div className='w-[14%] md:w-[8%] lg:w-[14%] p-4'>
         <Link
           href='/'
           className='flex items-center justify-center lg:justify-start gap-2'
@@ -21,7 +21,7 @@ export default function DashboardLayout({
         <Menu />
       </div>
       {/* right */}
-      <div className='w-[86%] md:w-[92%] lg:w-[86%] bg-blue-200'>r</div>
+      <div className='w-[86%] md:w-[92%] lg:w-[86%] '>r</div>
     </div>
   );
 }
