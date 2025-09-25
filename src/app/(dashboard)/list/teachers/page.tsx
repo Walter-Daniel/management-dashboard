@@ -1,8 +1,99 @@
 import Pagination from '@/components/Pagination';
+import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
 import Image from 'next/image';
+import Link from 'next/link';
+
+type TeacherProps = {
+  id: number;
+  teacherId: string;
+  name: string;
+  email?: string;
+  photo: string;
+  phone: string;
+  subjects: string[];
+  classes: string[];
+  address: string;
+};
+
+const columns = [
+  {
+    header: 'Info',
+    accesor: 'info',
+  },
+  {
+    header: 'Teacher',
+    accesor: 'teacherId',
+    className: 'hidden md:table-cell',
+  },
+  {
+    header: 'Teacher',
+    accesor: 'teacherId',
+    className: 'hidden md:table-cell',
+  },
+  {
+    header: 'Subjects',
+    accesor: 'subjects',
+    className: 'hidden md:table-cell',
+  },
+  {
+    header: 'Classes',
+    accesor: 'classes',
+    className: 'hidden md:table-cell',
+  },
+  {
+    header: 'Phone',
+    accesor: 'phone',
+    className: 'hidden lg:table-cell',
+  },
+  {
+    header: 'Address',
+    accesor: 'address',
+    className: 'hidden lg:table-cell',
+  },
+  {
+    header: 'Actions',
+    accesor: 'actions',
+  },
+];
 
 const TeacherListPage = () => {
+  const renderRows = (item: TeacherProps) => {
+    <tr>
+      <td>
+        <Image
+          src={item.photo}
+          alt={item.name}
+          width={40}
+          height={40}
+          className='md:hidden xl:block w-10 h-10 rounded-full object-cover'
+        />
+        <div className='flex flex-col'>
+          <h3 className='font-semibold'>{item.name}</h3>
+          <p className='text-xs text-gray-500'>{item?.email}</p>
+        </div>
+      </td>
+      <td className='hidden md:table-cell'>{item.teacherId}</td>
+      <td className='hidden md:table-cell'>{item.subjects.join(', ')}</td>
+      <td className='hidden md:table-cell'>{item.classes.join(', ')}</td>
+      <td className='hidden lg:table-cell'>{item.phone}</td>
+      <td className='hidden lg:table-cell'>{item.address}</td>
+      <td>
+        <div className='flex items-center gap-2'>
+          <Link
+            href={`/list/teachers/${item?.id}`}
+            className='btn btn-sm bg-schoolBlue hover:bg-schoolBlue/80 text-white'
+          >
+            <button className='w-7 h-7 flex items-center justify-center rounded-full bg-schoolSky'>
+              <Image src='/filter.png' alt='' width={14} height={14} />
+            </button>
+          </Link>
+        </div>
+      </td>
+    </tr>;
+    return null;
+  };
+
   return (
     <div className='bg-white p-4 rounded-md flex-1 m-4 mt-0'>
       {/* TOP */}
@@ -24,7 +115,9 @@ const TeacherListPage = () => {
         </div>
       </div>
       {/* LIST */}
-      <div></div>
+      <div>
+        <Table columns={columns} />
+      </div>
       {/* PAGINATION */}
       <div>
         <Pagination />
