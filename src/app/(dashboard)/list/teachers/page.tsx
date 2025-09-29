@@ -1,6 +1,7 @@
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
+import { role, teachersData } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -58,9 +59,12 @@ const columns = [
 ];
 
 const TeacherListPage = () => {
-  const renderRows = (item: TeacherProps) => {
-    <tr>
-      <td>
+  const renderRows = (item: TeacherProps) => (
+    <tr
+      key={item.id}
+      className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-schoolPurpleLight'
+    >
+      <td className='flex items-center gap-4 p-4'>
         <Image
           src={item.photo}
           alt={item.name}
@@ -88,11 +92,15 @@ const TeacherListPage = () => {
               <Image src='/filter.png' alt='' width={14} height={14} />
             </button>
           </Link>
+          {role === 'admin' && (
+            <button className='w-7 h-7 flex items-center justify-center rounded-full bg-schoolPurple'>
+              <Image src='/delete.png' alt='' width={14} height={14} />
+            </button>
+          )}
         </div>
       </td>
-    </tr>;
-    return null;
-  };
+    </tr>
+  );
 
   return (
     <div className='bg-white p-4 rounded-md flex-1 m-4 mt-0'>
@@ -116,7 +124,7 @@ const TeacherListPage = () => {
       </div>
       {/* LIST */}
       <div>
-        <Table columns={columns} />
+        <Table columns={columns} renderRows={renderRows} data={teachersData} />
       </div>
       {/* PAGINATION */}
       <div>
