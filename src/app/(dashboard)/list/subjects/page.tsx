@@ -44,7 +44,7 @@ const SubjectListPage = () => {
             className='btn btn-sm bg-schoolBlue hover:bg-schoolBlue/80 text-white'
           >
             <button className='w-7 h-7 flex items-center justify-center rounded-full bg-schoolSky'>
-              <Image src='/filter.png' alt='' width={14} height={14} />
+              <Image src='/edit.png' alt='' width={14} height={14} />
             </button>
           </Link>
           {role === 'admin' && (
