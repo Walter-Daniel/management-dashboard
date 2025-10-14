@@ -39,6 +39,10 @@ const columns = [
     accesor: 'endTime',
     className: 'hidden md:table-cell',
   },
+  {
+    header: 'Acciones',
+    accesor: 'actions',
+  },
 ];
 
 const EventListPage = () => {
