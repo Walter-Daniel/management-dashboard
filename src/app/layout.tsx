@@ -5,8 +5,11 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'School Management Dashboard',
-  description: 'Next.js School Management System',
+  title: 'Sistema de Gestión Escolar',
+  description: 'Sistema de Gestión Escolar basado en Next.js',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({
