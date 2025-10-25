@@ -3,14 +3,23 @@
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useState } from 'react';
-// import TeacherForm from './forms/TeacherForm';
-// import StudentForm from './forms/StudentForm';
+
+const LoadingSpinner = () => (
+  <div className='flex items-center justify-center w-full h-40'>
+    <div className='relative'>
+      <div className='w-12 h-12 rounded-full border-4 border-schoolYellow border-t-transparent animate-spin'></div>
+      <div className='mt-4 text-center text-gray-600 font-medium'>
+        Loading form...
+      </div>
+    </div>
+  </div>
+);
 
 const TeacherForm = dynamic(() => import('./forms/TeacherForm'), {
-  loading: () => <h1>Loading...</h1>,
+  loading: LoadingSpinner,
 });
 const StudentForm = dynamic(() => import('./forms/StudentForm'), {
-  loading: () => <h1>Loading...</h1>,
+  loading: LoadingSpinner,
 });
 
 const forms: {
