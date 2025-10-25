@@ -1,8 +1,33 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useState } from 'react';
-import TeacherForm from './forms/TeacherForm';
+
+const LoadingSpinner = () => (
+  <div className='flex items-center justify-center w-full h-40'>
+    <div className='relative'>
+      <div className='w-12 h-12 rounded-full border-4 border-schoolYellow border-t-transparent animate-spin'></div>
+      <div className='mt-4 text-center text-gray-600 font-medium'>
+        Loading form...
+      </div>
+    </div>
+  </div>
+);
+
+const TeacherForm = dynamic(() => import('./forms/TeacherForm'), {
+  loading: LoadingSpinner,
+});
+const StudentForm = dynamic(() => import('./forms/StudentForm'), {
+  loading: LoadingSpinner,
+});
+
+const forms: {
+  [key: string]: (type: 'create' | 'update', data?: any) => JSX.Element;
+} = {
+  teacher: (type, data) => <TeacherForm type={type} data={data} />,
+  student: (type, data) => <StudentForm type={type} data={data} />,
+};
 
 const FormModal = ({
   table,
@@ -32,7 +57,7 @@ const FormModal = ({
     type === 'create'
       ? 'bg-schoolYellow'
       : type === 'update'
-      ? 'bg-schoolSky'
+      ? 'bg-black'
       : 'bg-schoolPurple';
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -47,8 +72,10 @@ const FormModal = ({
           Delete
         </button>
       </form>
+    ) : type === 'create' || type === 'update' ? (
+      forms[table](type, data)
     ) : (
-      <TeacherForm type={'create'} />
+      'Form not found!'
     );
   };
 
