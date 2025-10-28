@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -9,22 +8,22 @@ datasource db {
 }
 
 model Admin {
-  id       Int    @id @default(autoincrement())
+  id       String @id @default(uuid())
   username String @unique
 }
 
 model Student {
-  id        String  @id @default(uuid())
-  username  String  @unique
+  id        String   @id @default(uuid())
+  username  String   @unique
   firstName String
   lastName  String
-  email     String? @unique
-  phone     String? @unique
+  email     String?  @unique
+  phone     String?  @unique
   address   String
   image     String?
   bloodType String
-  age       Int?
   sex       UserSex
+  birthday  DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -40,17 +39,17 @@ model Student {
 }
 
 model Teacher {
-  id        String  @id @default(uuid())
-  username  String  @unique
+  id        String   @id @default(uuid())
+  username  String   @unique
   firstName String
   lastName  String
-  email     String? @unique
-  phone     String? @unique
+  email     String?  @unique
+  phone     String?  @unique
   address   String
   image     String?
   bloodType String
-  age       Int?
   sex       UserSex
+  birthday  DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -92,8 +91,8 @@ model Class {
 
   students     Student[]
   lessons      Lesson[]
-  supervisor   Teacher        @relation(fields: [supervisorId], references: [id])
-  supervisorId String
+  supervisor   Teacher?       @relation(fields: [supervisorId], references: [id])
+  supervisorId String?
   grade        Grade          @relation(fields: [gradeId], references: [id])
   gradeId      Int
   Event        Event[]
@@ -110,7 +109,7 @@ model Subject {
 model Lesson {
   id        Int      @id @default(autoincrement())
   title     String
-  content   String
+  day       Day
   startTime DateTime
   endTime   DateTime
 
@@ -134,14 +133,11 @@ model Exam {
   startTime DateTime
   endTime   DateTime
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   lesson   Lesson   @relation(fields: [lessonId], references: [id])
   lessonId Int
-  grade    Grade    @relation(fields: [gradeId], references: [id])
-  gradeId  Int
   results  Result[]
+  Grade    Grade?   @relation(fields: [gradeId], references: [id])
+  gradeId  Int?
 }
 
 model Assignment {
@@ -150,14 +146,11 @@ model Assignment {
   startDate DateTime
   dueDate   DateTime
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   lesson   Lesson   @relation(fields: [lessonId], references: [id])
   lessonId Int
-  grade    Grade    @relation(fields: [gradeId], references: [id])
-  gradeId  Int
   results  Result[]
+  Grade    Grade?   @relation(fields: [gradeId], references: [id])
+  gradeId  Int?
 }
 
 model Result {
@@ -176,9 +169,9 @@ model Result {
 }
 
 model Attendance {
-  id     Int      @id @default(autoincrement())
-  date   DateTime
-  status Boolean
+  id      Int      @id @default(autoincrement())
+  date    DateTime
+  present Boolean
 
   student   Student @relation(fields: [studentId], references: [id])
   studentId String
@@ -190,8 +183,8 @@ model Event {
   id          Int      @id @default(autoincrement())
   title       String
   description String
-  startDate   DateTime
-  endDate     DateTime
+  startTime   DateTime
+  endTime     DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
