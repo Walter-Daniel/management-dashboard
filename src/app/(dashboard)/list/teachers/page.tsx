@@ -54,7 +54,7 @@ const renderRows = (item: TeacherList) => (
   >
     <td className='flex items-center gap-4 p-4'>
       <Image
-        src={item.image || '/notAvatar.png'}
+        src={item.image || '/noAvatar.png'}
         alt={`${item.firstName || 'Unknown'}'s avatar`}
         width={40}
         height={40}
