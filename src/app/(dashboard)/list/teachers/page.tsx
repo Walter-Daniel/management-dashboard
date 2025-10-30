@@ -8,7 +8,6 @@ import { ITEM_PER_PAGE } from '@/lib/settings';
 import { Class, Prisma, Subject, Teacher } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { parse } from 'path';
 
 type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 
@@ -108,18 +107,25 @@ const TeacherListPage = async ({
 
   const query: Prisma.TeacherWhereInput = {};
 
-  if (queryParams.name) {
+  if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
-          case 'classId': {
+          case 'classId':
             query.lessons = {
               some: {
                 classId: parseInt(value),
               },
             };
             break;
-          }
+          case 'search':
+            query.OR = [
+              { firstName: { contains: value, mode: 'insensitive' } },
+              { lastName: { contains: value, mode: 'insensitive' } },
+              { username: { contains: value, mode: 'insensitive' } },
+              { email: { contains: value, mode: 'insensitive' } },
+            ];
+            break;
         }
       }
     }
