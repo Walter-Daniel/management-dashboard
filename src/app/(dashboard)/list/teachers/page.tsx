@@ -126,6 +126,8 @@ const TeacherListPage = async ({
               { email: { contains: value, mode: 'insensitive' } },
             ];
             break;
+          default:
+            break;
         }
       }
     }

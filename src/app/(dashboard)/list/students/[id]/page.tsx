@@ -143,25 +143,25 @@ const SingleStudentPage = () => {
               className='p-3 rounded-md bg-schoolSkyLight'
               href='/dashboard'
             >
-              Materias
+              Teacher&apos;s Classes
             </Link>
             <Link
               className='p-3 rounded-md bg-schoolPurpleLight'
-              href='/students'
+              href={`/list/students?teacherId=teacher2`}
             >
-              Profesores
+              Teacher&apos;s Students
             </Link>
             <Link
               className='p-3 rounded-md bg-schoolYellowLight'
               href='/classes'
             >
-              Exámenes
+              Teacher&apos;s Exams
             </Link>
             <Link className='p-3 rounded-md bg-pink-50' href='/exams'>
               Tareas
             </Link>
             <Link className='p-3 rounded-md bg-orange-50' href='/tasks'>
-              Calificaciones
+              Teacher&apos;s Assignments
             </Link>
           </div>
         </div>

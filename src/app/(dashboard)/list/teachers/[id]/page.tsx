@@ -103,7 +103,7 @@ const SingleTeacherPage = () => {
               />
               <div className=''>
                 <h1 className='text-xl font-semibold'>90%</h1>
-                <span className='text-sm text-gray-400'>Asistencia</span>
+                <span className='text-sm text-gray-400'>Attendance</span>
               </div>
             </div>
             {/* CARD */}
@@ -117,7 +117,7 @@ const SingleTeacherPage = () => {
               />
               <div className=''>
                 <h1 className='text-xl font-semibold'>2</h1>
-                <span className='text-sm text-gray-400'>Áreas</span>
+                <span className='text-sm text-gray-400'>Branches</span>
               </div>
             </div>
             {/* CARD */}
@@ -131,7 +131,7 @@ const SingleTeacherPage = () => {
               />
               <div className=''>
                 <h1 className='text-xl font-semibold'>6</h1>
-                <span className='text-sm text-gray-400'>Clases</span>
+                <span className='text-sm text-gray-400'>Lessons</span>
               </div>
             </div>
             {/* CARD */}
@@ -145,45 +145,42 @@ const SingleTeacherPage = () => {
               />
               <div className=''>
                 <h1 className='text-xl font-semibold'>6</h1>
-                <span className='text-sm text-gray-400'>Cursos</span>
+                <span className='text-sm text-gray-400'>Classes</span>
               </div>
             </div>
           </div>
         </div>
         {/* BOTTOM */}
         <div className='mt-4 bg-white rounded-md p-4 h-[800px]'>
-          <h1 className='text-xl font-semibold'>Cronograma</h1>
+          <h1 className='text-xl font-semibold'>Teacher&apos;s Schedule</h1>
           <BigCalendar />
         </div>
       </div>
       {/* RIGHT */}
       <div className='w-full xl:w-1/3 flex flex-col gap-4'>
         <div className='bg-white p-4 rounded-md'>
-          <h1 className='text-xl font-semibold'>Atajos</h1>
+          <h1 className='text-xl font-semibold'>Shortcuts</h1>
           <div className='mt-4 flex gap-4 flex-wrap text-xs text-gray-500'>
             <Link
               className='p-3 rounded-md bg-schoolSkyLight'
-              href='/dashboard'
+              href={`/teachers/classes?supervisorId=${'teacher2'}`}
             >
-              Cursos
+              Teacher&apos;s Classes
             </Link>
             <Link
               className='p-3 rounded-md bg-schoolPurpleLight'
-              href='/students'
+              href={`/teachers/students?teacherId=${'teacher2'}`}
             >
-              Alumnos
+              Teacher&apos;s Students
             </Link>
-            <Link
-              className='p-3 rounded-md bg-schoolYellowLight'
-              href='/classes'
-            >
-              Clases
+            <Link className='p-3 rounded-md bg-schoolYellowLight' href='/'>
+              Teacher&apos;s Lessons
             </Link>
-            <Link className='p-3 rounded-md bg-pink-50' href='/exams'>
-              Exámenes
+            <Link className='p-3 rounded-md bg-pink-50' href='/'>
+              Teacher&apos;s Exams
             </Link>
-            <Link className='p-3 rounded-md bg-orange-50' href='/tasks'>
-              Tareas
+            <Link className='p-3 rounded-md bg-orange-50' href='/'>
+              Teacher&apos;s Assignments
             </Link>
           </div>
         </div>
