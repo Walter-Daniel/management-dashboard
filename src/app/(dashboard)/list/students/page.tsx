@@ -8,6 +8,7 @@ import { ITEM_PER_PAGE } from '@/lib/settings';
 import { Class, Prisma, Student } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { de } from 'zod/locales';
 
 type StudentList = Student & { class: Class };
 
@@ -111,6 +112,8 @@ const StudentListPage = async ({
             query.OR = [
               { firstName: { contains: value, mode: 'insensitive' } },
             ];
+            break;
+          default:
             break;
         }
       }

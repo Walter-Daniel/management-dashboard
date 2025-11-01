@@ -120,7 +120,7 @@ model Lesson {
   subjectId  Int
   class      Class        @relation(fields: [classId], references: [id])
   classId    Int
-  teachers   Teacher      @relation(fields: [teacherId], references: [id])
+  teacher    Teacher      @relation(fields: [teacherId], references: [id])
   teacherId  String
   Exam       Exam[]
   Assignment Assignment[]
