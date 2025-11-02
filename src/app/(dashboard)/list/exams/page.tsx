@@ -2,16 +2,18 @@ import FormModal from '@/components/FormModal';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
-import { examsData, role, subjectsData } from '@/lib/data';
+import { role } from '@/lib/data';
+import { prisma } from '@/lib/prisma';
+import { ITEM_PER_PAGE } from '@/lib/settings';
+import { Class, Exam, Prisma, Subject, Teacher } from '@prisma/client';
 import Image from 'next/image';
-import Link from 'next/link';
 
-type ExamProps = {
-  id: number;
-  subject: string;
-  class: string;
-  teacher: string;
-  date: string;
+type ExamList = Exam & {
+  lesson: {
+    subject: Subject;
+    class: Class;
+    teacher: Teacher;
+  };
 };
 
 const columns = [
@@ -40,28 +42,98 @@ const columns = [
   },
 ];
 
-const ExamListPage = () => {
-  const renderRows = (item: ExamProps) => (
-    <tr
-      key={item.id}
-      className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-schoolPurpleLight'
-    >
-      <td className='flex items-center gap-4 p-4'>{item.subject}</td>
-      <td className='hidden md:table-cell'>{item.class}</td>
-      <td className='hidden md:table-cell'>{item.teacher}</td>
-      <td className='hidden md:table-cell'>{item.date}</td>
-      <td>
-        <div className='flex items-center gap-2'>
-          {role === 'admin' && (
-            <>
-              <FormModal table='exam' type='update' data={item} />
-              <FormModal table='exam' type='delete' id={item.id} />
-            </>
-          )}
-        </div>
-      </td>
-    </tr>
-  );
+const renderRows = (item: ExamList) => (
+  <tr
+    key={item.id}
+    className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-schoolPurpleLight'
+  >
+    <td className='flex items-center gap-4 p-4'>{item.lesson.subject.name}</td>
+    <td className='hidden md:table-cell'>{item.lesson.class.name}</td>
+    <td className='hidden md:table-cell'>
+      {item.lesson.teacher.firstName} {item.lesson.teacher.lastName}
+    </td>
+    <td className='hidden md:table-cell'>
+      {new Intl.DateTimeFormat('en-US').format(new Date(item.startTime))}
+    </td>
+    <td>
+      <div className='flex items-center gap-2'>
+        {role === 'admin' && (
+          <>
+            <FormModal table='exam' type='update' data={item} />
+            <FormModal table='exam' type='delete' id={item.id} />
+          </>
+        )}
+      </div>
+    </td>
+  </tr>
+);
+
+const ExamListPage = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page, ...queryParams } = searchParams;
+  const p = page ? Number(page) : 1;
+
+  //URL params conditions can be added here
+
+  const query: Prisma.ExamWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case 'classId':
+            query.lesson = { classId: parseInt(value) };
+            break;
+          case 'teacherId':
+            query.lesson = { teacherId: value };
+            break;
+          case 'search':
+            query.lesson = {
+              subject: {
+                name: {
+                  contains: value,
+                  mode: 'insensitive',
+                },
+              },
+              teacher: {
+                firstName: {
+                  contains: value,
+                  mode: 'insensitive',
+                },
+                lastName: {
+                  contains: value,
+                  mode: 'insensitive',
+                },
+              },
+            };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  const [data, count] = await prisma.$transaction([
+    prisma.exam.findMany({
+      where: query,
+      include: {
+        lesson: {
+          select: {
+            subject: { select: { name: true } },
+            teacher: { select: { firstName: true, lastName: true } },
+            class: { select: { name: true } },
+          },
+        },
+      },
+      take: ITEM_PER_PAGE,
+      skip: (p - 1) * ITEM_PER_PAGE,
+    }),
+    prisma.exam.count(),
+  ]);
 
   return (
     <div className='bg-white p-4 rounded-md flex-1 m-4 mt-0'>
@@ -83,11 +155,11 @@ const ExamListPage = () => {
       </div>
       {/* LIST */}
       <div>
-        <Table columns={columns} renderRows={renderRows} data={examsData} />
+        <Table columns={columns} renderRows={renderRows} data={data} />
       </div>
       {/* PAGINATION */}
       <div>
-        <Pagination />
+        <Pagination count={count} currentPage={p} />
       </div>
     </div>
   );
