@@ -2,7 +2,7 @@ import FormModal from '@/components/FormModal';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
-import { announcementsData, role } from '@/lib/data';
+import { role } from '@/lib/data';
 import { prisma } from '@/lib/prisma';
 import { ITEM_PER_PAGE } from '@/lib/settings';
 import { Announcement, Class, Prisma } from '@prisma/client';
@@ -16,17 +16,17 @@ const columns = [
     accesor: 'title',
   },
   {
-    header: 'Clase',
+    header: 'Class',
     accesor: 'class',
     className: 'hidden md:table-cell',
   },
   {
-    header: 'Fecha',
+    header: 'Date',
     accesor: 'date',
     className: 'hidden md:table-cell',
   },
   {
-    header: 'Acciones',
+    header: 'Actions',
     accesor: 'actions',
   },
 ];
@@ -114,11 +114,7 @@ const AnnoucementListPage = async ({
       </div>
       {/* LIST */}
       <div>
-        <Table
-          columns={columns}
-          renderRows={renderRows}
-          data={announcementsData}
-        />
+        <Table columns={columns} renderRows={renderRows} data={data} />
       </div>
       {/* PAGINATION */}
       <div>

@@ -18,22 +18,22 @@ const columns = [
     accesor: 'info',
   },
   {
-    header: 'Estudiante ID',
+    header: 'Student ID',
     accesor: 'studentId',
     className: 'hidden md:table-cell',
   },
   {
-    header: 'Grado',
+    header: 'Grade',
     accesor: 'grade',
     className: 'hidden md:table-cell',
   },
   {
-    header: 'Teléfono',
+    header: 'Phone',
     accesor: 'phone',
     className: 'hidden md:table-cell',
   },
   {
-    header: 'Dirección',
+    header: 'Address',
     accesor: 'address',
     className: 'hidden md:table-cell',
   },

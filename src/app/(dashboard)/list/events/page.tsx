@@ -12,26 +12,26 @@ type EventList = Event & { class: Class };
 
 const columns = [
   {
-    header: 'Título',
+    header: 'Title',
     accesor: 'title',
   },
   {
-    header: 'Clase',
+    header: 'Class',
     accesor: 'class',
     className: 'hidden md:table-cell',
   },
   {
-    header: 'Fecha',
+    header: 'Date',
     accesor: 'date',
     className: 'hidden md:table-cell',
   },
   {
-    header: 'Hora inicio',
+    header: 'Start time',
     accesor: 'startTime',
     className: 'hidden md:table-cell',
   },
   {
-    header: 'Hora fin',
+    header: 'End time',
     accesor: 'endTime',
     className: 'hidden md:table-cell',
   },
