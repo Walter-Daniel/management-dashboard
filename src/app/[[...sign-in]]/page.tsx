@@ -2,9 +2,20 @@
 
 import * as Clerk from '@clerk/elements/common';
 import * as SignIn from '@clerk/elements/sign-in';
+import { useUser } from '@clerk/nextjs';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Page() {
+  const { isLoaded, isSignedIn, user } = useUser();
+  const router = useRouter();
+  useEffect(() => {
+    const role = user?.publicMetadata.role;
+    if (role) {
+      router.push(`/${role}`);
+    }
+  }, [user, router]);
   return (
     <div className='h-screen flex items-center justify-center bg-schoolSkyLight'>
       <SignIn.Root>
@@ -13,23 +24,40 @@ export default function Page() {
           className='bg-white p-12 rounded-md shadow-2xl flex flex-col gap-2'
         >
           <h1 className='text-xl font-bold flex items-center gap-2'>
-            <Image src='/logo.png' alt='logo' />
+            <Image src='/logo.png' alt='logo' width={30} height={30} />
             PurpleSchool
           </h1>
           <h2>Sign in to your account</h2>
 
-          <Clerk.GlobalError />
-          <Clerk.Field name='identifier'>
-            <Clerk.Label>Username</Clerk.Label>
-            <Clerk.Input type='text' required />
-            <Clerk.FieldError />
+          <Clerk.GlobalError className='text-sm text-red-400' />
+          <Clerk.Field name='identifier' className='flex flex-col gap-2'>
+            <Clerk.Label className='text-xs text-gray-500'>
+              Username
+            </Clerk.Label>
+            <Clerk.Input
+              type='text'
+              required
+              className='p-2 rounded-md ring-1 ring-gray-500'
+            />
+            <Clerk.FieldError className='text-xs text-red-500' />
           </Clerk.Field>
-          <Clerk.Field name='identifier'>
-            <Clerk.Label>Password</Clerk.Label>
-            <Clerk.Input type='password' required />
-            <Clerk.FieldError />
+          <Clerk.Field name='password' className='flex flex-col gap-2'>
+            <Clerk.Label className='text-xs text-gray-500'>
+              Password
+            </Clerk.Label>
+            <Clerk.Input
+              type='password'
+              required
+              className='p-2 rounded-md ring-1 ring-gray-500'
+            />
+            <Clerk.FieldError className='text-xs text-red-500' />
           </Clerk.Field>
-          <SignIn.Action submit>Sign In</SignIn.Action>
+          <SignIn.Action
+            submit
+            className='bg-blue-500 text-white text-sm my-1 rounded-md p-[10px]'
+          >
+            Sign In
+          </SignIn.Action>
         </SignIn.Step>
       </SignIn.Root>
     </div>
