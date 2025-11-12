@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function Page() {
+const HomePage = () => {
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
   useEffect(() => {
@@ -62,4 +62,6 @@ export default function Page() {
       </SignIn.Root>
     </div>
   );
-}
+};
+
+export default HomePage;
