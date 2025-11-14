@@ -2,62 +2,70 @@ import FormModal from '@/components/FormModal';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
-import { role } from '@/lib/data';
 import { prisma } from '@/lib/prisma';
 import { ITEM_PER_PAGE } from '@/lib/settings';
+import { auth } from '@clerk/nextjs/server';
 import { Announcement, Class, Prisma } from '@prisma/client';
 import Image from 'next/image';
 
 type AnnoucementList = Announcement & { class: Class };
 
-const columns = [
-  {
-    header: 'Título',
-    accesor: 'title',
-  },
-  {
-    header: 'Class',
-    accesor: 'class',
-    className: 'hidden md:table-cell',
-  },
-  {
-    header: 'Date',
-    accesor: 'date',
-    className: 'hidden md:table-cell',
-  },
-  {
-    header: 'Actions',
-    accesor: 'actions',
-  },
-];
-
-const renderRows = (item: AnnoucementList) => (
-  <tr
-    key={item.id}
-    className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-schoolPurpleLight'
-  >
-    <td className='flex items-center gap-4 p-4'>{item.title}</td>
-    <td className=''>{item.class.name}</td>
-    <td className='hidden md:table-cell'>
-      {new Intl.DateTimeFormat('en-US').format(new Date(item.date))}
-    </td>
-    <td>
-      <div className='flex items-center gap-2'>
-        {role === 'admin' && (
-          <>
-            <FormModal table='announcement' type='update' data={item} />
-            <FormModal table='announcement' type='delete' id={item.id} />
-          </>
-        )}
-      </div>
-    </td>
-  </tr>
-);
 const AnnoucementListPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
+  const { sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+
+  const columns = [
+    {
+      header: 'Título',
+      accesor: 'title',
+    },
+    {
+      header: 'Class',
+      accesor: 'class',
+      className: 'hidden md:table-cell',
+    },
+    {
+      header: 'Date',
+      accesor: 'date',
+      className: 'hidden md:table-cell',
+    },
+    ...(role === 'admin'
+      ? [
+          {
+            header: 'Actions',
+            accesor: 'actions',
+          },
+        ]
+      : []),
+  ];
+
+  const renderRows = (item: AnnoucementList) => (
+    <tr
+      key={item.id}
+      className='border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-schoolPurpleLight'
+    >
+      <td className='flex items-center gap-4 p-4'>{item.title}</td>
+      <td className=''>{item.class.name}</td>
+      <td className='hidden md:table-cell'>
+        {new Intl.DateTimeFormat('en-US').format(new Date(item.date))}
+      </td>
+      <td>
+        <div className='flex items-center gap-2'>
+          {role === 'admin' && (
+            <>
+              <FormModal table='announcement' type='update' data={item} />
+              <FormModal table='announcement' type='delete' id={item.id} />
+            </>
+          )}
+        </div>
+      </td>
+    </tr>
+  );
+
   const { page, ...queryParams } = searchParams;
   const p = page ? Number(page) : 1;
 
