@@ -27,6 +27,8 @@ const schema = z.object({
   img: z.instanceof(File, { message: 'Image is required!' }),
 });
 
+type Inputs = z.infer<typeof schema>;
+
 const TeacherForm = ({
   type,
   data,
@@ -38,7 +40,7 @@ const TeacherForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
   });
 
