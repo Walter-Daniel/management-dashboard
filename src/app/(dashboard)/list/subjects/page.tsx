@@ -3,7 +3,7 @@ import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
 import { role } from '@/lib/data';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { ITEM_PER_PAGE } from '@/lib/settings';
 import { Prisma, Subject, Teacher } from '@prisma/client';
 import Image from 'next/image';
@@ -53,10 +53,8 @@ const SubjectListPage = async ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const { page, ...queryParams } = searchParams;
+  const { page, ...queryParams } = await searchParams;
   const p = page ? Number(page) : 1;
-
-  //URL params conditions can be added here
 
   const query: Prisma.SubjectWhereInput = {};
 
