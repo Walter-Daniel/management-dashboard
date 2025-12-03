@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import Image from 'next/image';
 
 const UseCard = async ({
@@ -24,7 +24,7 @@ const UseCard = async ({
         <Image src='/more.png' alt='' width={20} height={20} />
       </div>
       <h1 className='text-2xl font-semibold my-4'>{data}</h1>
-      <h2 className='capitalize text-sm font-medium text-gray-500'>{type}</h2>
+      <h2 className='capitalize text-sm font-medium text-gray-500'>{type}s</h2>
     </div>
   );
 };
