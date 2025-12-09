@@ -4,7 +4,12 @@ import { revalidatePath } from 'next/cache';
 import { SubjectSchema } from './formValidationSchemas';
 import prisma from './prisma';
 
-export const createSubject = async (data: SubjectSchema) => {
+type CurrentState = { success: boolean; error: boolean };
+
+export const createSubject = async (
+  currentState: CurrentState,
+  data: SubjectSchema
+) => {
   try {
     await prisma.subject.create({
       data: {
@@ -12,8 +17,16 @@ export const createSubject = async (data: SubjectSchema) => {
       },
     });
 
-    revalidatePath('/list/subjects');
+    // revalidatePath('/list/subjects');
+    return {
+      success: true,
+      error: false,
+    };
   } catch (error) {
     console.log(error);
+    return {
+      success: false,
+      error: true,
+    };
   }
 };
