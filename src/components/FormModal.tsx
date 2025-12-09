@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 const LoadingSpinner = () => (
   <div className='flex items-center justify-center w-full h-40'>
@@ -26,11 +26,21 @@ const SubjectForm = dynamic(() => import('./forms/SubjectForm'), {
 });
 
 const forms: {
-  [key: string]: (type: 'create' | 'update', data?: any) => JSX.Element;
+  [key: string]: (
+    setModalOpen: Dispatch<SetStateAction<boolean>>,
+    type: 'create' | 'update',
+    data?: any
+  ) => JSX.Element;
 } = {
-  teacher: (type, data) => <TeacherForm type={type} data={data} />,
-  student: (type, data) => <StudentForm type={type} data={data} />,
-  subject: (type, data) => <SubjectForm type={type} data={data} />,
+  subject: (setModalOpen, type, data) => (
+    <SubjectForm type={type} data={data} setModalOpen={setModalOpen} />
+  ),
+  teacher: (setModalOpen, type, data) => (
+    <TeacherForm type={type} data={data} setModalOpen={setModalOpen} />
+  ),
+  student: (setModalOpen, type, data) => (
+    <StudentForm type={type} data={data} setModalOpen={setModalOpen} />
+  ),
 };
 
 const FormModal = ({
@@ -77,7 +87,7 @@ const FormModal = ({
         </button>
       </form>
     ) : type === 'create' || type === 'update' ? (
-      forms[table](type, data)
+      forms[table](setModalOpen, type, data)
     ) : (
       'Form not found!'
     );
