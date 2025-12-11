@@ -1,8 +1,32 @@
 'use client';
 
+import { deleteSubject } from '@/lib/actions';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  Dispatch,
+  SetStateAction,
+  useActionState,
+  useEffect,
+  useState,
+} from 'react';
+import { toast } from 'react-toastify';
+
+const deleteActionMap = {
+  subject: deleteSubject,
+  class: deleteSubject,
+  teacher: deleteSubject,
+  student: deleteSubject,
+  parent: deleteSubject,
+  lesson: deleteSubject,
+  exam: deleteSubject,
+  assignment: deleteSubject,
+  result: deleteSubject,
+  attendance: deleteSubject,
+  event: deleteSubject,
+  announcement: deleteSubject,
+};
 
 const LoadingSpinner = () => (
   <div className='flex items-center justify-center w-full h-40'>
@@ -77,8 +101,26 @@ const FormModal = ({
   const [modalOpen, setModalOpen] = useState(false);
 
   const Form = () => {
+    const [state, formAction] = useActionState(deleteActionMap[table], {
+      success: false,
+      error: false,
+    });
+
+    const router = useRouter();
+
+    useEffect(() => {
+      if (state.success) {
+        toast.success(`Subject has been deleted!`);
+        setModalOpen(false);
+        router.refresh();
+      } else if (state.error) {
+        toast.error('An error occurred while processing your request.');
+      }
+    }, [state]);
+
     return type === 'delete' && id ? (
-      <form action='' className='p-4 flex flex-col gap-4'>
+      <form action={formAction} className='p-4 flex flex-col gap-4'>
+        <input type='text | number' name='id' value={id} hidden readOnly />
         <span className='text-center font-medium'>
           Are you sure you want to delete this {table}?
         </span>
