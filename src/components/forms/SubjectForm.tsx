@@ -6,9 +6,10 @@ import InputField from '../InputField';
 import {
   SubjectInputSchema,
   subjectInputSchema,
+  subjectSchema,
   SubjectSchema,
 } from '@/lib/formValidationSchemas';
-import { createSubject, updateSubject } from '@/lib/actions';
+import { createSubject, updateSubject } from '@/lib/actions/subjects';
 import {
   Dispatch,
   SetStateAction,
@@ -23,10 +24,12 @@ const SubjectForm = ({
   type,
   data,
   setModalOpen,
+  relatedData,
 }: {
   type: 'create' | 'update';
   data?: any;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
+  relatedData?: any;
 }) => {
   const {
     register,
@@ -47,9 +50,9 @@ const SubjectForm = ({
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data + 'Desde handle');
+    const parsed = subjectSchema.parse(data);
     startTransition(() => {
-      formAction(data as SubjectSchema);
+      formAction(parsed);
     });
   });
 
@@ -66,6 +69,8 @@ const SubjectForm = ({
       toast.error('An error occurred while processing your request.');
     }
   }, [state, type, router, setModalOpen]);
+
+  const teachers = relatedData?.teachers ?? [];
 
   return (
     <form className='flex flex-col gap-8' onSubmit={onSubmit}>
@@ -92,6 +97,34 @@ const SubjectForm = ({
             hidden
           />
         )}
+        <div className='flex flex-col gap-2 w-full md:w-1/4'>
+          <label htmlFor='sex' className='text-xs text-gray-500'>
+            Teachers
+          </label>
+          <select
+            multiple
+            {...register('teachers')}
+            className='ring-[1.5px] ring-gray-300 rounded-md p-2 w-full'
+            defaultValue={data?.teachers}
+          >
+            {teachers.map(
+              (teacher: {
+                id: string;
+                firstName: string;
+                lastName: string;
+              }) => (
+                <option value={teacher.id} key={teacher.id}>
+                  {teacher.firstName + ' ' + teacher.lastName}
+                </option>
+              )
+            )}
+          </select>
+          {errors.teachers?.message && (
+            <p className='text-xs text-red-400'>
+              {errors.teachers.message.toString()}
+            </p>
+          )}
+        </div>
       </div>
       <button className='bg-blue-400 text-white p-2 rounded-md'>
         {isPending ? 'Processing...' : type === 'create' ? 'Create' : 'Update'}

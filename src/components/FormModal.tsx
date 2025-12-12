@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteSubject } from '@/lib/actions';
+import { deleteSubject } from '@/lib/actions/subjects';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,7 @@ import {
   useState,
 } from 'react';
 import { toast } from 'react-toastify';
+import { FormContainerProps } from './FormContainer';
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -53,17 +54,33 @@ const forms: {
   [key: string]: (
     setModalOpen: Dispatch<SetStateAction<boolean>>,
     type: 'create' | 'update',
-    data?: any
+    data?: any,
+    relatedData?: any
   ) => JSX.Element;
 } = {
-  subject: (setModalOpen, type, data) => (
-    <SubjectForm type={type} data={data} setModalOpen={setModalOpen} />
+  subject: (setModalOpen, type, data, relatedData) => (
+    <SubjectForm
+      type={type}
+      data={data}
+      setModalOpen={setModalOpen}
+      relatedData={relatedData}
+    />
   ),
-  teacher: (setModalOpen, type, data) => (
-    <TeacherForm type={type} data={data} setModalOpen={setModalOpen} />
+  teacher: (setModalOpen, type, data, relatedData) => (
+    <TeacherForm
+      type={type}
+      data={data}
+      setModalOpen={setModalOpen}
+      relatedData={relatedData}
+    />
   ),
-  student: (setModalOpen, type, data) => (
-    <StudentForm type={type} data={data} setModalOpen={setModalOpen} />
+  student: (setModalOpen, type, data, relatedData) => (
+    <StudentForm
+      type={type}
+      data={data}
+      setModalOpen={setModalOpen}
+      relatedData={relatedData}
+    />
   ),
 };
 
@@ -72,24 +89,8 @@ const FormModal = ({
   type,
   data,
   id,
-}: {
-  table:
-    | 'student'
-    | 'teacher'
-    | 'parent'
-    | 'subject'
-    | 'class'
-    | 'lesson'
-    | 'exam'
-    | 'assignment'
-    | 'result'
-    | 'attendance'
-    | 'event'
-    | 'announcement';
-  type: 'create' | 'update' | 'delete';
-  data?: any;
-  id?: string | number;
-}) => {
+  relatedData,
+}: FormContainerProps & { relatedData?: any }) => {
   const size = type === 'create' ? 'w-8 h-8' : 'w-7 h-7';
   const bgColor =
     type === 'create'
@@ -129,7 +130,7 @@ const FormModal = ({
         </button>
       </form>
     ) : type === 'create' || type === 'update' ? (
-      forms[table](setModalOpen, type, data)
+      forms[table](setModalOpen, type, data, relatedData)
     ) : (
       'Form not found!'
     );
