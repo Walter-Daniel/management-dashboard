@@ -14,11 +14,12 @@ import {
 import { toast } from 'react-toastify';
 import { FormContainerProps } from './FormContainer';
 import { deleteClass } from '@/lib/actions/class.actions';
+import { deleteTeacher } from '@/lib/actions/teacher.actions';
 
 const deleteActionMap = {
   subject: deleteSubject,
   class: deleteClass,
-  teacher: deleteSubject,
+  teacher: deleteTeacher,
   student: deleteSubject,
   parent: deleteSubject,
   lesson: deleteSubject,
@@ -78,14 +79,14 @@ const forms: {
       relatedData={relatedData}
     />
   ),
-  // teacher: (setModalOpen, type, data, relatedData) => (
-  //   <TeacherForm
-  //     type={type}
-  //     data={data}
-  //     setModalOpen={setModalOpen}
-  //     relatedData={relatedData}
-  //   />
-  // ),
+  teacher: (setModalOpen, type, data, relatedData) => (
+    <TeacherForm
+      type={type}
+      data={data}
+      setModalOpen={setModalOpen}
+      relatedData={relatedData}
+    />
+  ),
   // student: (setModalOpen, type, data, relatedData) => (
   //   <StudentForm
   //     type={type}

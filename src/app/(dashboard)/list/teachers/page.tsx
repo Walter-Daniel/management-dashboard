@@ -1,4 +1,4 @@
-import FormModal from '@/components/FormModal';
+import FormContainer from '@/components/FormContainer';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
@@ -97,14 +97,14 @@ const TeacherListPage = async ({
             </button>
           </Link>
           {role === 'admin' && (
-            <FormModal table='teacher' type='delete' id={item.id} />
+            <FormContainer table='teacher' type='delete' id={item.id} />
           )}
         </div>
       </td>
     </tr>
   );
 
-  const { page, ...queryParams } = searchParams;
+  const { page, ...queryParams } = await searchParams;
   const p = page ? Number(page) : 1;
 
   //URL params conditions can be added here
@@ -161,7 +161,9 @@ const TeacherListPage = async ({
             <button className='w-8 h-8 flex items-center justify-center rounded-full bg-schoolYellow'>
               <Image src='/sort.png' alt='' width={14} height={14} />
             </button>
-            {role === 'admin' && <FormModal table='teacher' type='create' />}
+            {role === 'admin' && (
+              <FormContainer table='teacher' type='create' />
+            )}
           </div>
         </div>
       </div>

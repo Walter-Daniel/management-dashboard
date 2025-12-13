@@ -1,5 +1,4 @@
 import FormContainer from '@/components/FormContainer';
-import FormModal from '@/components/FormModal';
 import Pagination from '@/components/Pagination';
 import Table from '@/components/Table';
 import TableSearch from '@/components/TableSearch';
@@ -34,7 +33,9 @@ const renderRows = (item: SubjectList) => (
   >
     <td className='flex items-center gap-4 p-4'>{item.name}</td>
     <td className='hidden md:table-cell'>
-      {item.teachers.map((teacher) => teacher.firstName).join(', ')}
+      {item.teachers
+        .map((teacher) => teacher.firstName + ' ' + teacher.lastName)
+        .join(', ')}
     </td>
     <td>
       <div className='flex items-center gap-2'>
@@ -97,7 +98,9 @@ const SubjectListPage = async ({
             <button className='w-8 h-8 flex items-center justify-center rounded-full bg-schoolYellow'>
               <Image src='/sort.png' alt='' width={14} height={14} />
             </button>
-            {role === 'admin' && <FormModal table='subject' type='create' />}
+            {role === 'admin' && (
+              <FormContainer table='subject' type='create' />
+            )}
           </div>
         </div>
       </div>
