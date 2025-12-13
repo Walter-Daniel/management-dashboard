@@ -5,9 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import InputField from '../InputField';
 import Image from 'next/image';
 import {
-  teacherDomainSchema,
-  TeacherFormData,
-  teacherFormSchema,
+  TeacherSchemaInput,
+  TeacherSchemaOutput,
+  teacherSchema,
 } from '@/lib/schemas/teacher.schema';
 import {
   Dispatch,
@@ -37,8 +37,8 @@ const TeacherForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TeacherFormData>({
-    resolver: zodResolver(teacherFormSchema),
+  } = useForm<TeacherSchemaInput, any, TeacherSchemaOutput>({
+    resolver: zodResolver(teacherSchema),
   });
 
   const [img, setImg] = useState<any>();
@@ -54,9 +54,8 @@ const TeacherForm = ({
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = handleSubmit((data) => {
-    const parsed = teacherDomainSchema.parse(data);
     startTransition(() => {
-      formAction({ ...parsed, img: img?.secure_url });
+      formAction({ ...data, img: img?.secure_url });
     });
   });
 
