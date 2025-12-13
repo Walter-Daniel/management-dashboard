@@ -3,11 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputField from '../InputField';
-import {
-  SubjectInputSchema,
-  subjectInputSchema,
-  subjectSchema,
-} from '@/lib/schemas/subject.schema';
+import { SubjectSchema, subjectSchema } from '@/lib/schemas/subject.schema';
 import { createSubject, updateSubject } from '@/lib/actions/subjects.actions';
 import {
   Dispatch,
@@ -34,8 +30,8 @@ const SubjectForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SubjectInputSchema>({
-    resolver: zodResolver(subjectInputSchema),
+  } = useForm<SubjectSchema>({
+    resolver: zodResolver(subjectSchema),
   });
 
   const [state, formAction] = useActionState(
@@ -49,9 +45,8 @@ const SubjectForm = ({
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = handleSubmit((data) => {
-    const parsed = subjectSchema.parse(data);
     startTransition(() => {
-      formAction(parsed);
+      formAction(data);
     });
   });
 
