@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteSubject } from '@/lib/actions/subjects';
+import { deleteSubject } from '@/lib/actions/subjects.actions';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

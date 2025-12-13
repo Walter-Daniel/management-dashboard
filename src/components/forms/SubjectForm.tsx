@@ -7,9 +7,8 @@ import {
   SubjectInputSchema,
   subjectInputSchema,
   subjectSchema,
-  SubjectSchema,
-} from '@/lib/formValidationSchemas';
-import { createSubject, updateSubject } from '@/lib/actions/subjects';
+} from '@/lib/schemas/subject.schema';
+import { createSubject, updateSubject } from '@/lib/actions/subjects.actions';
 import {
   Dispatch,
   SetStateAction,
