@@ -13,10 +13,11 @@ import {
 } from 'react';
 import { toast } from 'react-toastify';
 import { FormContainerProps } from './FormContainer';
+import { deleteClass } from '@/lib/actions/class.actions';
 
 const deleteActionMap = {
   subject: deleteSubject,
-  class: deleteSubject,
+  class: deleteClass,
   teacher: deleteSubject,
   student: deleteSubject,
   parent: deleteSubject,
@@ -49,6 +50,9 @@ const StudentForm = dynamic(() => import('./forms/StudentForm'), {
 const SubjectForm = dynamic(() => import('./forms/SubjectForm'), {
   loading: LoadingSpinner,
 });
+const ClassForm = dynamic(() => import('./forms/ClassForm'), {
+  loading: LoadingSpinner,
+});
 
 const forms: {
   [key: string]: (
@@ -66,22 +70,30 @@ const forms: {
       relatedData={relatedData}
     />
   ),
-  teacher: (setModalOpen, type, data, relatedData) => (
-    <TeacherForm
+  class: (setModalOpen, type, data, relatedData) => (
+    <ClassForm
       type={type}
       data={data}
       setModalOpen={setModalOpen}
       relatedData={relatedData}
     />
   ),
-  student: (setModalOpen, type, data, relatedData) => (
-    <StudentForm
-      type={type}
-      data={data}
-      setModalOpen={setModalOpen}
-      relatedData={relatedData}
-    />
-  ),
+  // teacher: (setModalOpen, type, data, relatedData) => (
+  //   <TeacherForm
+  //     type={type}
+  //     data={data}
+  //     setModalOpen={setModalOpen}
+  //     relatedData={relatedData}
+  //   />
+  // ),
+  // student: (setModalOpen, type, data, relatedData) => (
+  //   <StudentForm
+  //     type={type}
+  //     data={data}
+  //     setModalOpen={setModalOpen}
+  //     relatedData={relatedData}
+  //   />
+  // ),
 };
 
 const FormModal = ({
