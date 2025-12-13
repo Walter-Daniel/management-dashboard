@@ -20,10 +20,31 @@ export const teacherSchema = z.object({
   bloodType: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
     message: 'Blood type is required!',
   }),
-  dateOfBirth: z.coerce.date({ message: 'Birthday is required!' }),
+  dateOfBirth: z.string().min(1, 'Birthday is required!'),
   sex: z.enum(['MALE', 'FEMALE', 'OTHER'], { message: 'Sex is required!' }),
   img: z.string().optional(),
   subjects: z.array(z.string()).optional(), //subject ids
 });
 
-export type TeacherSchema = z.infer<typeof teacherSchema>;
+export const teacherFormSchema = z.object({
+  id: z.string().optional(),
+  username: z.string().min(1),
+  password: z.string().min(1),
+  firstName: z.string(),
+  lastName: z.string(),
+  address: z.string(),
+  bloodType: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+  dateOfBirth: z.string().min(1),
+  sex: z.enum(['MALE', 'FEMALE', 'OTHER']),
+  supervisorId: z.string(),
+  subjects: z.array(z.string()).optional(),
+  email: z.email({ message: 'Invalid email address!' }).optional(),
+  phone: z.string().optional(),
+});
+
+export const teacherDomainSchema = teacherFormSchema.extend({
+  dateOfBirth: z.string().transform((val) => new Date(val)),
+});
+
+export type TeacherFormData = z.infer<typeof teacherFormSchema>; // string
+export type TeacherDomainData = z.infer<typeof teacherDomainSchema>; // Date

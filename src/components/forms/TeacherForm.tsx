@@ -4,7 +4,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputField from '../InputField';
 import Image from 'next/image';
-import { teacherSchema, TeacherSchema } from '@/lib/schemas/teacher.schema';
+import {
+  teacherDomainSchema,
+  TeacherFormData,
+  teacherFormSchema,
+} from '@/lib/schemas/teacher.schema';
 import {
   Dispatch,
   SetStateAction,
@@ -33,8 +37,8 @@ const TeacherForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TeacherSchema>({
-    resolver: zodResolver(teacherSchema),
+  } = useForm<TeacherFormData>({
+    resolver: zodResolver(teacherFormSchema),
   });
 
   const [img, setImg] = useState<any>();
@@ -50,7 +54,7 @@ const TeacherForm = ({
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = handleSubmit((data) => {
-    const parsed = teacherSchema.parse(data);
+    const parsed = teacherDomainSchema.parse(data);
     startTransition(() => {
       formAction({ ...parsed, img: img?.secure_url });
     });
@@ -111,6 +115,16 @@ const TeacherForm = ({
         Personal Information
       </span>
       <div className='flex justify-between flex-wrap gap-4'>
+        {data && (
+          <InputField
+            label='Id'
+            name='id'
+            defaultValue={data?.id?.toString()}
+            register={register}
+            error={errors?.id}
+            hidden
+          />
+        )}
         <InputField
           label='First Name'
           type='text'
@@ -156,7 +170,7 @@ const TeacherForm = ({
           type='date'
           register={register}
           name='dateOfBirth'
-          defaultValue={data?.dateOfBirth}
+          defaultValue={data?.birthday.toISOString().split('T')[0]}
           error={errors.dateOfBirth}
         />
         <div className='flex flex-col gap-2 w-full md:w-1/4'>
