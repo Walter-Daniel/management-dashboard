@@ -4,11 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InputField from '../InputField';
 import Image from 'next/image';
-import {
-  TeacherSchemaInput,
-  TeacherSchemaOutput,
-  teacherSchema,
-} from '@/lib/schemas/teacher.schema';
+import { TeacherSchema, teacherSchema } from '@/lib/schemas/teacher.schema';
 import {
   Dispatch,
   SetStateAction,
@@ -37,7 +33,7 @@ const TeacherForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TeacherSchemaInput, any, TeacherSchemaOutput>({
+  } = useForm<TeacherSchema>({
     resolver: zodResolver(teacherSchema),
   });
 

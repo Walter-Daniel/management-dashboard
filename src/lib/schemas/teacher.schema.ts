@@ -12,7 +12,9 @@ export const teacherSchema = z.object({
     .or(z.literal('')),
   password: z
     .string()
-    .min(8, { message: 'Password must be at least 8 characters long!' }),
+    .min(8, { message: 'Password must be at least 8 characters long!' })
+    .optional()
+    .or(z.literal('')),
   firstName: z.string().min(1, 'First name is required!'),
   lastName: z.string().min(1, 'Last name is required!'),
   phone: z.string().optional(),
@@ -26,5 +28,4 @@ export const teacherSchema = z.object({
   subjects: z.array(z.string()).optional(), //subject ids
 });
 
-export type TeacherSchemaInput = z.output<typeof teacherSchema>;
-export type TeacherSchemaOutput = z.input<typeof teacherSchema>;
+export type TeacherSchema = z.infer<typeof teacherSchema>;

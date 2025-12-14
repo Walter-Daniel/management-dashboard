@@ -2,8 +2,9 @@
 
 import { revalidatePath } from 'next/cache';
 import prisma from '../prisma';
-import { TeacherSchema } from '../schemas/teacher.schema';
+
 import { clerkClient } from '@clerk/nextjs/server';
+import { TeacherSchema } from '../schemas/teacher.schema';
 
 type CurrentState = { success: boolean; error: boolean };
 
@@ -43,7 +44,7 @@ export const createTeacher = async (
       },
     });
 
-    // revalidatePath('/list/subjects');
+    // revalidatePath('/list/teachers');
     return {
       success: true,
       error: false,
@@ -61,15 +62,45 @@ export const updateTeacher = async (
   currentState: CurrentState,
   data: TeacherSchema
 ) => {
+  if (!data.id) {
+    return { success: false, error: true };
+  }
   try {
+    const clerk = await clerkClient();
+
+    const user = await clerk.users.updateUser(data.id, {
+      username: data.username,
+      ...(data.password !== '' && { password: data.password }),
+      firstName: data.firstName,
+      lastName: data.lastName,
+      publicMetadata: { role: 'teacher' },
+    });
+
     await prisma.teacher.update({
       where: {
         id: data.id,
       },
-      data,
+      data: {
+        ...(data.password !== '' && { password: data.password }),
+        username: data.username,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        image: data.img,
+        bloodType: data.bloodType,
+        sex: data.sex,
+        birthday: data.dateOfBirth,
+        subjects: {
+          set: data.subjects?.map((subjectId: string) => ({
+            id: parseInt(subjectId),
+          })),
+        },
+      },
     });
 
-    // revalidatePath('/list/subjects');
+    // revalidatePath('/list/teachers');
     return {
       success: true,
       error: false,
@@ -87,7 +118,14 @@ export const deleteTeacher = async (
   currentState: CurrentState,
   data: FormData
 ) => {
-  const id = data.get('id') as string;
+  const clerk = await clerkClient();
+  const id = data.get('id');
+  if (!id || typeof id !== 'string') {
+    return {
+      success: false,
+      error: 'Invalid teacher id',
+    };
+  }
   try {
     await prisma.teacher.delete({
       where: {
@@ -95,7 +133,8 @@ export const deleteTeacher = async (
       },
     });
 
-    // revalidatePath('/list/subjects');
+    await clerk.users.deleteUser(id);
+    // revalidatePath('/list/teachers');
     return {
       success: true,
       error: false,
