@@ -15,12 +15,13 @@ import { toast } from 'react-toastify';
 import { FormContainerProps } from './FormContainer';
 import { deleteClass } from '@/lib/actions/class.actions';
 import { deleteTeacher } from '@/lib/actions/teacher.actions';
+import { deleteStudent } from '@/lib/actions/student.actions';
 
 const deleteActionMap = {
   subject: deleteSubject,
   class: deleteClass,
   teacher: deleteTeacher,
-  student: deleteSubject,
+  student: deleteStudent,
   parent: deleteSubject,
   lesson: deleteSubject,
   exam: deleteSubject,
@@ -87,14 +88,14 @@ const forms: {
       relatedData={relatedData}
     />
   ),
-  // student: (setModalOpen, type, data, relatedData) => (
-  //   <StudentForm
-  //     type={type}
-  //     data={data}
-  //     setModalOpen={setModalOpen}
-  //     relatedData={relatedData}
-  //   />
-  // ),
+  student: (setModalOpen, type, data, relatedData) => (
+    <StudentForm
+      type={type}
+      data={data}
+      setModalOpen={setModalOpen}
+      relatedData={relatedData}
+    />
+  ),
 };
 
 const FormModal = ({
@@ -124,7 +125,7 @@ const FormModal = ({
 
     useEffect(() => {
       if (state.success) {
-        toast.success(`Subject has been deleted!`);
+        toast.success(`${table} has been deleted!`);
         setModalOpen(false);
         router.refresh();
       } else if (state.error) {
