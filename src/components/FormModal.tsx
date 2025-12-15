@@ -15,15 +15,17 @@ import { toast } from 'react-toastify';
 import { FormContainerProps } from './FormContainer';
 import { deleteClass } from '@/lib/actions/class.actions';
 import { deleteTeacher } from '@/lib/actions/teacher.actions';
+import { deleteStudent } from '@/lib/actions/student.actions';
+import { deleteExam } from '@/lib/actions/exam.actions';
 
 const deleteActionMap = {
   subject: deleteSubject,
   class: deleteClass,
   teacher: deleteTeacher,
-  student: deleteSubject,
+  student: deleteStudent,
   parent: deleteSubject,
   lesson: deleteSubject,
-  exam: deleteSubject,
+  exam: deleteExam,
   assignment: deleteSubject,
   result: deleteSubject,
   attendance: deleteSubject,
@@ -52,6 +54,9 @@ const SubjectForm = dynamic(() => import('./forms/SubjectForm'), {
   loading: LoadingSpinner,
 });
 const ClassForm = dynamic(() => import('./forms/ClassForm'), {
+  loading: LoadingSpinner,
+});
+const ExamForm = dynamic(() => import('./forms/ExamForm'), {
   loading: LoadingSpinner,
 });
 
@@ -87,14 +92,22 @@ const forms: {
       relatedData={relatedData}
     />
   ),
-  // student: (setModalOpen, type, data, relatedData) => (
-  //   <StudentForm
-  //     type={type}
-  //     data={data}
-  //     setModalOpen={setModalOpen}
-  //     relatedData={relatedData}
-  //   />
-  // ),
+  student: (setModalOpen, type, data, relatedData) => (
+    <StudentForm
+      type={type}
+      data={data}
+      setModalOpen={setModalOpen}
+      relatedData={relatedData}
+    />
+  ),
+  exam: (setModalOpen, type, data, relatedData) => (
+    <ExamForm
+      type={type}
+      data={data}
+      setModalOpen={setModalOpen}
+      relatedData={relatedData}
+    />
+  ),
 };
 
 const FormModal = ({
@@ -124,7 +137,7 @@ const FormModal = ({
 
     useEffect(() => {
       if (state.success) {
-        toast.success(`Subject has been deleted!`);
+        toast.success(`${table} has been deleted!`);
         setModalOpen(false);
         router.refresh();
       } else if (state.error) {

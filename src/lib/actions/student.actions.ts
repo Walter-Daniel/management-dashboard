@@ -4,15 +4,35 @@ import { revalidatePath } from 'next/cache';
 import prisma from '../prisma';
 
 import { clerkClient } from '@clerk/nextjs/server';
-import { TeacherSchema } from '../schemas/teacher.schema';
+import { StudentSchema } from '../schemas/student.schema';
 
 type CurrentState = { success: boolean; error: boolean };
 
-export const createTeacher = async (
+export const createStudent = async (
   currentState: CurrentState,
-  data: TeacherSchema
+  data: StudentSchema
 ) => {
   try {
+    const classItem = await prisma.class.findUnique({
+      where: {
+        id: data.classId,
+      },
+      include: {
+        _count: {
+          select: {
+            students: true,
+          },
+        },
+      },
+    });
+
+    if (classItem && classItem.capacity === classItem._count.students) {
+      return {
+        success: false,
+        error: true,
+      };
+    }
+
     const clerk = await clerkClient();
 
     const user = await clerk.users.createUser({
@@ -20,10 +40,10 @@ export const createTeacher = async (
       password: data.password,
       firstName: data.firstName,
       lastName: data.lastName,
-      publicMetadata: { role: 'teacher' },
+      publicMetadata: { role: 'student' },
     });
 
-    await prisma.teacher.create({
+    await prisma.student.create({
       data: {
         id: user.id,
         username: data.username,
@@ -36,15 +56,13 @@ export const createTeacher = async (
         bloodType: data.bloodType,
         sex: data.sex,
         birthday: data.dateOfBirth,
-        subjects: {
-          connect: data.subjects?.map((subjectId: string) => ({
-            id: parseInt(subjectId),
-          })),
-        },
+        classId: data.classId,
+        gradeId: data.gradeId,
+        parentId: data.parentId,
       },
     });
 
-    // revalidatePath('/list/teachers');
+    // revalidatePath('/list/students');
     return {
       success: true,
       error: false,
@@ -58,9 +76,9 @@ export const createTeacher = async (
   }
 };
 
-export const updateTeacher = async (
+export const updateStudent = async (
   currentState: CurrentState,
-  data: TeacherSchema
+  data: StudentSchema
 ) => {
   if (!data.id) {
     return { success: false, error: true };
@@ -76,7 +94,7 @@ export const updateTeacher = async (
       publicMetadata: { role: 'teacher' },
     });
 
-    await prisma.teacher.update({
+    await prisma.student.update({
       where: {
         id: data.id,
       },
@@ -92,11 +110,9 @@ export const updateTeacher = async (
         bloodType: data.bloodType,
         sex: data.sex,
         birthday: data.dateOfBirth,
-        subjects: {
-          set: data.subjects?.map((subjectId: string) => ({
-            id: parseInt(subjectId),
-          })),
-        },
+        classId: data.classId,
+        gradeId: data.gradeId,
+        parentId: data.parentId,
       },
     });
 
@@ -114,7 +130,26 @@ export const updateTeacher = async (
   }
 };
 
-export const deleteTeacher = async (
+export const testStudents = async () => {
+  const studentsGrade = await prisma.grade.findMany({
+    select: { id: true, level: true },
+  });
+  const studentsClasses = await prisma.class.findMany({
+    include: {
+      _count: {
+        select: {
+          students: true,
+        },
+      },
+    },
+  });
+  return {
+    grades: studentsGrade,
+    classes: studentsClasses,
+  };
+};
+
+export const deleteStudent = async (
   currentState: CurrentState,
   data: FormData
 ) => {
@@ -127,7 +162,7 @@ export const deleteTeacher = async (
     };
   }
   try {
-    await prisma.teacher.delete({
+    await prisma.student.delete({
       where: {
         id: id,
       },
