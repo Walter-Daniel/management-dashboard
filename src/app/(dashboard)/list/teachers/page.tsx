@@ -107,8 +107,6 @@ const TeacherListPage = async ({
   const { page, ...queryParams } = await searchParams;
   const p = page ? Number(page) : 1;
 
-  //URL params conditions can be added here
-
   const query: Prisma.TeacherWhereInput = {};
 
   if (queryParams) {
